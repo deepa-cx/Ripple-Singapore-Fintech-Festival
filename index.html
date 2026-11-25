@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ripple | Singapore Fintech Festival | Alkimi Exchange</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600&family=Poppins:wght@300;400;500;600&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{
+  color-scheme:dark;
+  --black:#0A0A0F;--grey-mid:#7A7A85;--grey-light:#C8C8D0;--white:#FFFFFF;
+  --purple:#5C26FF;--purple-light:#8A5CFF;--green:#00E87B;--green-dark:#00B862;
+  --cyan:#00C8EC;--amber:#FFB84D;--pink:#FF5FA2;
+  --surface-1:#121218;--border:rgba(255,255,255,0.08);--border-hover:rgba(255,255,255,0.15);
+  --font-title:'Unbounded',system-ui,sans-serif;--font-body:'Poppins',system-ui,sans-serif;
+  --r-lg:14px;--r-md:10px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--black:#0A0A0F}}
+:root[data-theme="dark"]{--black:#0A0A0F}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--black);color:var(--white);font-family:var(--font-body);font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh}
+.overline{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--purple-light);display:block;margin:40px 0 16px}
+.overline.first{margin-top:0}
+.navbar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 32px;background:rgba(10,10,15,.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
+.navbar-left{display:flex;align-items:center;gap:24px;min-width:0}
+.alkimi-logo svg{height:22px;width:auto;display:block}
+.divider-v{width:1px;height:28px;background:var(--border)}
+.navbar-title{font-family:var(--font-title);font-size:16px;font-weight:500;letter-spacing:.02em;text-transform:uppercase;line-height:1.2;display:block}
+.navbar-sub{font-size:13px;color:var(--grey-mid)}
+.navbar-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0}
+.live{font-size:11px;font-weight:600;letter-spacing:.04em;padding:4px 12px;border-radius:999px;background:rgba(0,232,123,.15);color:var(--green);border:1px solid rgba(0,232,123,.25)}
+.updated{font-size:11px;color:var(--grey-mid)}
+.tabs{background:var(--surface-1);border-bottom:1px solid var(--border);padding:0 32px;display:flex;overflow-x:auto}
+.tab{padding:14px 20px;font-size:13px;font-weight:500;color:var(--grey-mid);cursor:pointer;border:none;background:none;font-family:inherit;border-bottom:2px solid transparent;white-space:nowrap;transition:color .2s,border-color .2s}
+.tab:hover{color:var(--grey-light)}
+.tab.active{color:var(--white);border-bottom-color:var(--purple);font-weight:600}
+.content{padding:32px;max-width:1320px;margin:0 auto}
+.panel{display:none}.panel.active{display:block}
+.hero{background:var(--surface-1);border:1px solid var(--border);border-radius:var(--r-lg);padding:32px;margin-bottom:32px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-60%;right:-10%;width:500px;height:500px;background:radial-gradient(ellipse,rgba(92,38,255,.1) 0%,transparent 65%);pointer-events:none}
+.hero>*{position:relative}
+.hero-eyebrow{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--purple-light);margin-bottom:8px}
+.hero-title{font-family:var(--font-title);font-size:22px;font-weight:500;letter-spacing:-.02em;text-transform:uppercase;line-height:1.15;margin-bottom:8px}
+.hero-sub{font-size:13px;color:var(--grey-light);font-weight:300}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:16px}
+.kpi-grid.kpi-grid-2{grid-template-columns:repeat(2,1fr)}
+.kpi-grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px}
+.kpi{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:var(--r-lg);padding:24px;position:relative;overflow:hidden;transition:border-color .2s,background .2s}
+.kpi:hover{border-color:rgba(92,38,255,.3);background:rgba(255,255,255,.06)}
+.kpi::after{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.kpi.ap::after{background:linear-gradient(90deg,var(--purple),var(--purple-light))}
+.kpi.ag::after{background:linear-gradient(90deg,var(--green-dark),var(--green))}
+.kpi.ac::after{background:linear-gradient(90deg,#0088D4,var(--cyan))}
+.kpi.agr::after{background:linear-gradient(90deg,var(--grey-mid),var(--grey-light))}
+.kpi-label{font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--grey-mid);margin-bottom:8px}
+.kpi-value{font-family:var(--font-title);font-size:26px;font-weight:600;letter-spacing:-.02em;line-height:1.1;margin-bottom:8px}
+.kpi-value.sm{font-size:18px;text-transform:none}
+.kpi-sub{font-size:11.5px;color:var(--grey-mid)}
+.tag{display:inline-flex;font-size:11px;font-weight:600;margin-top:6px;padding:2px 8px;border-radius:999px}
+.tag.green{background:rgba(0,232,123,.08);color:var(--green)}
+.tag.muted{background:rgba(255,255,255,.06);color:var(--grey-light)}
+.tag.purple{background:rgba(92,38,255,.15);color:var(--purple-light)}
+.grid{display:grid;gap:16px}
+.col2{grid-template-columns:1fr 1fr}.col3eq{grid-template-columns:repeat(3,1fr);align-items:start}.col3{grid-template-columns:2fr 1fr}
+.card{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--r-lg);padding:24px;transition:border-color .2s;min-width:0}
+.card:hover{border-color:var(--border-hover)}
+.card-title{font-size:13px;font-weight:600;margin-bottom:2px;letter-spacing:-.01em}
+.card-sub{font-size:11.5px;color:var(--grey-mid);margin-bottom:16px}
+.chart{position:relative;height:300px}.chart.tall{height:360px}.chart.short{height:240px}
+.table-wrap{overflow-x:auto}
+.table-wrap.scroll{max-height:520px;overflow-y:auto}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{background:rgba(255,255,255,.03);color:var(--grey-mid);font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;padding:10px 14px;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap}
+.scroll th{position:sticky;top:0;background:#16161d;z-index:1}
+td{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.04);color:var(--grey-light);white-space:nowrap}
+tr:hover td{background:rgba(255,255,255,.02)}
+.num{text-align:right;font-variant-numeric:tabular-nums}
+th.num{text-align:right}
+.bold{color:var(--white);font-weight:600}
+.row-sub td{background:rgba(92,38,255,.08)}
+.row-total td{background:rgba(255,255,255,.04);border-top:1px solid rgba(92,38,255,.2);color:var(--white);font-weight:600;border-bottom:none}
+.hi{color:var(--green)!important;font-weight:600}
+.mid{color:var(--purple-light)!important}
+.insight{background:rgba(92,38,255,.08);border:1px solid rgba(92,38,255,.2);border-radius:var(--r-md);padding:16px 24px;margin-bottom:24px;font-size:13px;color:var(--grey-light)}
+.insight ul{list-style:none;display:flex;flex-direction:column;gap:6px}
+.insight li{display:flex;gap:8px}
+.insight li::before{content:'•';color:var(--purple-light)}
+.insight strong{color:var(--white);font-weight:600}
+.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.split{display:flex;flex-direction:column;gap:14px;margin-top:16px}
+.split-row{display:flex;align-items:center;justify-content:space-between;font-size:12.5px;color:var(--grey-light);gap:8px}
+.split-row b{color:var(--white);font-weight:600}
+.footnote{font-size:11px;color:var(--grey-mid);margin-top:24px}
+@media (max-width:960px){
+  .kpi-grid,.kpi-grid.kpi-grid-2{grid-template-columns:repeat(2,1fr)}
+.kpi-grid-3{grid-template-columns:repeat(2,1fr)}
+  .col2,.col3,.col3eq{grid-template-columns:1fr}
+  .content{padding:16px}
+  .tabs,.navbar{padding-left:16px;padding-right:16px}
+  .hero-title{font-size:16px}.hero{padding:24px}
+  .navbar-campaign,.divider-v{display:none}
+}
+@media (max-width:520px){
+  .kpi-grid,.kpi-grid.kpi-grid-2,.kpi-grid-3{grid-template-columns:1fr}
+  .navbar-right .updated{display:none}
+  .ripple-word{display:none}
+}
+</style>
+</head>
+<body>
+<nav class="navbar">
+  <div class="navbar-left">
+    <div style="display:inline-flex;align-items:center;gap:10px">
+      <svg width="26" height="24" viewBox="-6 -6 72 66" fill="none" aria-hidden="true"><defs><linearGradient id="rg" x1="30" y1="-6" x2="30" y2="60" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#00C8EC"/><stop offset="55%" stop-color="#0088D4"/><stop offset="100%" stop-color="#0055BB"/></linearGradient></defs><circle cx="30" cy="12" r="14" fill="url(#rg)"/><circle cx="13" cy="42" r="14" fill="url(#rg)"/><circle cx="47" cy="42" r="14" fill="url(#rg)"/></svg>
+      <span class="ripple-word" style="font-size:15px;font-weight:500;letter-spacing:-.01em;line-height:1">ripple</span>
+    </div>
+    <div style="color:var(--grey-mid);font-size:18px;font-weight:300;line-height:1;padding:0 4px">×</div>
+    <div class="alkimi-logo" aria-label="Alkimi">
+      <svg viewBox="68 46 216 48" fill="none" aria-hidden="true"><path d="M83.8615 58.6759C78.5907 58.5085 73.4034 59.9878 69.0608 62.8966L72.2676 68.7C75.3341 66.4522 79.084 65.2623 82.9241 65.3187C88.7704 65.3187 91.6565 68.0525 91.6565 72.7289V73.2325H82.5787C71.9222 73.2325 68 77.693 68 83.4005C68 89.1081 73.057 93.6166 81.074 93.6166C86.3283 93.6166 90.1518 91.9618 92.1005 89.0121V93.1609H99.8462V73.0646C99.8462 63.2323 93.9999 58.6759 83.8861 58.6759H83.8615ZM91.6319 82.5132C90.9055 84.187 89.6588 85.5979 88.0663 86.5483C86.4738 87.4987 84.6154 87.9409 82.7514 87.8131C78.5332 87.8131 76.0417 85.9665 76.0417 83.0168C76.0417 80.6187 77.5465 78.4844 83.1461 78.4844H91.6319V82.4413V82.5132Z" fill="#FFF"/><path d="M113.711 46H105.497V93.4109H113.711V46Z" fill="#FFF"/><path d="M145.855 93.7292H155.845L139.811 73.9447L154.464 59.6278H144.597L127.576 74.9519V46H119.361V93.7292H127.576V84.7362L133.693 79.1006L145.855 93.7292Z" fill="#FFF"/><path d="M167.592 59.3477H159.378V93.473H167.592V59.3477Z" fill="#FFF"/><path d="M218.253 59.034C215.761 58.9459 213.281 59.412 211.002 60.397C208.724 61.382 206.707 62.8597 205.105 64.7176C203.822 62.8392 202.051 61.324 199.972 60.3258C197.892 59.3277 195.578 58.8819 193.264 59.034C191.102 58.9506 188.947 59.3381 186.958 60.1679C184.97 60.9977 183.197 62.2489 181.769 63.8302V59.4896H173.949V93.591H182.164V76.2765C182.164 69.5138 185.839 66.0605 191.291 66.0605C196.224 66.0605 199.184 69.0102 199.184 75.0774V93.591H207.399V76.2765C207.399 69.5138 211.148 66.0605 216.526 66.0605C221.46 66.0605 224.42 69.0102 224.42 75.0774V93.591H232.634V74.0463C232.634 63.7583 226.714 59.1059 218.253 59.1059" fill="#FFF"/><path d="M246.093 85.2653V67.2933C246.093 62.7562 242.415 59.0781 237.877 59.0781V93.4804C242.415 93.4804 246.093 89.8024 246.093 85.2653Z" fill="#FFF"/><path d="M262.163 59.0781C260.952 59.0781 261.062 60.3218 261.503 60.7674C261.985 61.1977 263.589 62.8645 263.589 62.8645L263.589 67.5642C263.589 67.5642 254.221 84.7493 253.026 86.9955C251.49 89.8835 253.906 93.4804 256.657 93.4804C258.562 93.4804 275.266 93.4804 278.111 93.4804C281.412 93.4804 283.833 90.0974 282.292 86.9955C281.75 85.9032 271.51 67.5642 271.51 67.5642V62.867L273.621 60.7674C274.267 60.1379 273.968 59.0781 273.044 59.0781C272.12 59.0781 263.549 59.0781 262.163 59.0781Z" fill="#FFF"/></svg>
+    </div>
+    <div class="divider-v"></div>
+    <div class="navbar-campaign">
+      <span class="navbar-title">Singapore Fintech Festival</span>
+      <span class="navbar-sub">Singapore · Geofenced display · 18 – 20 Nov 2026</span>
+    </div>
+  </div>
+  <div class="navbar-right">
+    <span class="live">Campaign Complete</span>
+    <span class="updated">Data to 20th November 2026</span>
+  </div>
+</nav>
+
+<div class="tabs" role="tablist">
+  <button class="tab active" data-tab="overall">Overall Performance</button>
+  <button class="tab" data-tab="creative">Creative Performance</button>
+  <button class="tab" data-tab="device">Device Performance</button>
+  <button class="tab" data-tab="publisher">Publisher Performance</button>
+</div>
+
+<main class="content">
+
+<!-- ═════ OVERALL ═════ -->
+<section class="panel active" id="overall">
+  <div class="hero">
+    <div class="hero-eyebrow">Campaign Overview · Alkimi Exchange</div>
+    <div class="hero-title">Ripple at Singapore Fintech Festival — Geofenced Display</div>
+    <div class="hero-sub">18th to 20th November 2026 · Singapore · Geofencing around Singapore EXPO and target companies · Mobile &amp; desktop display</div>
+  </div>
+
+  <span class="overline first">Campaign Summary</span>
+  <div class="kpi-grid">
+    <div class="kpi ap"><div class="kpi-label">Total Impressions</div><div class="kpi-value">342K</div><div class="kpi-sub">342,464 served</div><span class="tag muted">3-day flight</span></div>
+    <div class="kpi ap"><div class="kpi-label">Total Clicks</div><div class="kpi-value">2,720</div><div class="kpi-sub">Across 11 creative sizes</div></div>
+    <div class="kpi ag"><div class="kpi-label">Click-Through Rate</div><div class="kpi-value">0.79%</div><div class="kpi-sub">Clicks ÷ impressions</div><span class="tag green">+58% vs 0.5% benchmark</span></div>
+    <div class="kpi agr"><div class="kpi-label">Spend</div><div class="kpi-value">$4,000</div><div class="kpi-sub">USD · across the three days</div></div>
+  </div>
+  <div class="kpi-grid">
+    <div class="kpi"><div class="kpi-label">Geofence</div><div class="kpi-value sm">1km · 2km</div><div class="kpi-sub">1km around target companies, 2km around the Expo</div></div>
+  </div>
+
+  <span class="overline">Performance Trends</span>
+  <div class="insight"><ul>
+    <li><span>Launch day <strong>18 Nov</strong> carried the most volume (138,817 impressions) but the weakest CTR at <strong>0.16%</strong>.</span></li>
+    <li><span><strong>19 Nov</strong> was the breakout day: <strong>1.97% CTR</strong> and 1,893 clicks — <strong>69.6% of all clicks</strong> from 28.1% of impressions.</span></li>
+    <li><span><strong>20 Nov</strong> settled at <strong>0.56% CTR</strong>, still above the 0.5% benchmark on the final day of the festival.</span></li>
+  </ul></div>
+  <div class="card">
+    <div class="card-title">Daily Performance</div>
+    <div class="card-sub">Impressions &amp; CTR by day against the 0.5% benchmark — 18 Nov to 20 Nov</div>
+    <div class="chart tall"><canvas id="cDaily"></canvas></div>
+  </div>
+
+  <span class="overline">Daily Breakdown</span>
+  <div class="card">
+    <div class="table-wrap"><table>
+      <thead><tr><th>Date</th><th class="num">Impressions</th><th class="num">Clicks</th><th class="num">CTR</th><th class="num">Share of Clicks</th></tr></thead>
+      <tbody id="tDaily"></tbody>
+    </table></div>
+  </div>
+  <p class="footnote">CTR = clicks ÷ impressions. Source: Alkimi x Ripple Singapore Fintech Festival 2026 report. Spend reflects the $4,000 campaign budget agreed with Ripple; it is not part of the delivery report.</p>
+</section>
+
+<!-- ═════ CREATIVE ═════ -->
+<section class="panel" id="creative">
+  <span class="overline first">Creative Analysis</span>
+  <div class="insight"><ul>
+    <li><span><strong>320×480 (vertical mobile)</strong> is the standout at <strong>8.42% CTR</strong> — 879 clicks from just 10,438 impressions. Alongside 300×600 (3.61%), the two formats delivered <strong>47.5% of all clicks from 6.4% of impressions</strong>.</span></li>
+    <li><span>All four vertical sizes combined returned a <strong>5.41% CTR</strong> on 24,068 impressions, against <strong>0.42%</strong> for the horizontal banners (284,648 impressions).</span></li>
+    <li><span><strong>320×50</strong> was the workhorse: 187,309 impressions (54.7% of delivery) at a <strong>0.47% CTR</strong>, just under benchmark, and the largest single source of clicks after 320×480 (877).</span></li>
+  </ul></div>
+
+  <span class="overline">Creative Summary</span>
+  <div class="kpi-grid">
+    <div class="kpi ag"><div class="kpi-label">Top CTR Creative</div><div class="kpi-value sm">320×480 vertical</div><div class="kpi-sub">8.42% CTR · 879 clicks</div></div>
+    <div class="kpi ap"><div class="kpi-label">Highest Volume</div><div class="kpi-value sm">320×50 banner</div><div class="kpi-sub">187,309 impressions · 54.7% share</div></div>
+    <div class="kpi ac"><div class="kpi-label">Vertical Formats</div><div class="kpi-value sm">5.41% CTR</div><div class="kpi-sub">160×600, 300×600, 320×480, 768×1024</div></div>
+    <div class="kpi agr"><div class="kpi-label">Creative Sizes</div><div class="kpi-value">11</div><div class="kpi-sub">"Visit our booth" · English</div></div>
+  </div>
+
+  <span class="overline">Creative Charts</span>
+  <div class="grid col2">
+    <div class="card"><div class="card-title">CTR by Creative Size</div><div class="card-sub">Green = at or above the 0.5% benchmark</div><div class="chart tall"><canvas id="cCreCtr"></canvas></div></div>
+    <div class="card"><div class="card-title">Impressions vs Clicks by Format Type</div><div class="card-sub">Share of delivery against share of clicks</div><div class="chart tall"><canvas id="cCreShare"></canvas></div></div>
+  </div>
+
+  <span class="overline">Creative Breakdown</span>
+  <div class="card"><div class="table-wrap"><table>
+    <thead><tr><th>Creative</th><th>Type</th><th class="num">Impressions</th><th class="num">Clicks</th><th class="num">CTR</th><th class="num">Share of Impressions</th></tr></thead>
+    <tbody id="tCreative"></tbody>
+  </table></div></div>
+  <p class="footnote">Creative: "fintechs-img-english-sffvisitbooth" in 11 sizes. Very high CTRs on small volumes (e.g. 1024×768 at 417 impressions) should be read with caution.</p>
+</section>
+
+<!-- ═════ DEVICE ═════ -->
+<section class="panel" id="device">
+  <span class="overline first">Device Analysis</span>
+  <div class="insight"><ul>
+    <li><span><strong>Smartphone</strong> drove the campaign: <strong>325,308 impressions (95.0%)</strong> and <strong>2,677 clicks (98.4%)</strong> at a <strong>0.82% CTR</strong>, in line with attendees using their phones on-site.</span></li>
+    <li><span><strong>Tablet</strong> delivered a small volume (3,609 impressions) but a healthy <strong>0.69% CTR</strong>, also above benchmark.</span></li>
+    <li><span><strong>Desktop</strong> saw minimal delivery (13,547 impressions) and the weakest engagement at <strong>0.13% CTR</strong>.</span></li>
+  </ul></div>
+
+  <span class="overline">Device Summary</span>
+  <div class="kpi-grid-3">
+    <div class="kpi ag"><div class="kpi-label">📱 Smartphone</div><div class="kpi-value">0.82%</div><div class="kpi-sub">CTR · 325,308 impressions</div></div>
+    <div class="kpi ap"><div class="kpi-label">📲 Tablet</div><div class="kpi-value">0.69%</div><div class="kpi-sub">CTR · 3,609 impressions</div></div>
+    <div class="kpi agr"><div class="kpi-label">🖥️ Desktop</div><div class="kpi-value">0.13%</div><div class="kpi-sub">CTR · 13,547 impressions</div></div>
+  </div>
+
+  <span class="overline">Device Charts</span>
+  <div class="grid col2">
+    <div class="card"><div class="card-title">Impression Share by Device</div><div class="card-sub">Share of total delivered impressions</div>
+      <div class="grid col2" style="align-items:center"><div class="chart short"><canvas id="cDevShare"></canvas></div><div class="split" id="devSplit" style="margin-top:0"></div></div>
+    </div>
+    <div class="card"><div class="card-title">CTR by Device</div><div class="card-sub">Against the 0.5% benchmark</div><div class="chart short"><canvas id="cDevCtr"></canvas></div></div>
+  </div>
+
+  <span class="overline">Device Breakdown</span>
+  <div class="card"><div class="table-wrap"><table>
+    <thead><tr><th>Country</th><th>Device</th><th class="num">Impressions</th><th class="num">Clicks</th><th class="num">CTR</th><th class="num">Share of Impressions</th><th class="num">Share of Clicks</th></tr></thead>
+    <tbody id="tDevice"></tbody>
+  </table></div></div>
+</section>
+
+<!-- ═════ PUBLISHER ═════ -->
+<section class="panel" id="publisher">
+  <span class="overline first">Publisher Intelligence</span>
+  <div class="insight"><ul>
+    <li><span><strong>News</strong> is the strongest category at scale: <strong>2.80% CTR</strong> and 983 clicks (36.1% of the total) from just 35,165 impressions (10.3%).</span></li>
+    <li><span><strong>Entertainment &amp; lifestyle</strong> carried the most volume — <strong>153,630 impressions (44.9%)</strong> — and the most clicks (1,243, 45.7%) at a <strong>0.81% CTR</strong>.</span></li>
+    <li><span><strong>Books &amp; reading</strong> posted the highest CTR at <strong>11.07%</strong>, but on only 551 impressions (0.2% of delivery). <strong>Email, calls &amp; phone tools</strong> took 122,176 impressions (35.7%) at a lower <strong>0.28% CTR</strong>.</span></li>
+  </ul></div>
+
+  <span class="overline">Publisher Summary</span>
+  <div class="kpi-grid">
+    <div class="kpi ap"><div class="kpi-label">Publisher Categories</div><div class="kpi-value">9</div><div class="kpi-sub">Reported categories</div></div>
+    <div class="kpi ag"><div class="kpi-label">Top CTR Category</div><div class="kpi-value sm">Books &amp; reading</div><div class="kpi-sub">11.07% CTR · 551 impressions</div></div>
+    <div class="kpi ac"><div class="kpi-label">Highest Volume</div><div class="kpi-value sm">Entertainment &amp; lifestyle</div><div class="kpi-sub">153,630 impressions · 44.9% share</div></div>
+    <div class="kpi agr"><div class="kpi-label">Lowest CTR Category</div><div class="kpi-value sm">Gaming sites &amp; platforms</div><div class="kpi-sub">0.21% CTR · 13,670 impressions</div></div>
+  </div>
+
+  <span class="overline">Publisher Charts</span>
+  <div class="grid col2">
+    <div class="card"><div class="card-title">CTR by Publisher Category</div><div class="card-sub">Log scale · green = at or above the 0.5% benchmark</div><div class="chart tall"><canvas id="cCatCtr"></canvas></div></div>
+    <div class="card"><div class="card-title">Share of Impressions vs Clicks</div><div class="card-sub">Share of campaign total by category</div><div class="chart tall"><canvas id="cCatShare"></canvas></div></div>
+  </div>
+
+  <span class="overline">Category Breakdown</span>
+  <div class="card"><div class="table-wrap"><table>
+    <thead><tr><th>Rank</th><th>Category</th><th class="num">Impressions</th><th class="num">Clicks</th><th class="num">CTR</th><th class="num">Share of Impressions</th><th class="num">Share of Clicks</th></tr></thead>
+    <tbody id="tCat"></tbody>
+  </table></div></div>
+  <p class="footnote">Source: Ripple - Singapore Fin Fest publisher report. Rank is as provided in the report. Small-volume categories (e.g. Books &amp; reading) should be read with caution.</p>
+</section>
+
+</main>
+
+<script>
+// ── Data ──
+const DAILY=[["18 Nov",138817,225],["19 Nov",96083,1893],["20 Nov",107564,602]];
+const DEVICE=[["Smartphone",325308,2677],["Tablet",3609,25],["Desktop",13547,18]];
+const CREATIVE=[["320×480","Vertical",10438,879],["300×600","Vertical",11421,412],["1024×768","Horizontal",417,19],["480×320","Horizontal",4223,78],["768×1024","Vertical",432,7],["300×250","Square",33748,212],["320×50","Horizontal",187309,877],["160×600","Vertical",1777,5],["728×90","Horizontal",11512,30],["300×50","Horizontal",79816,200],["920×250","Horizontal",1371,1]];
+const PUBCAT=[["News",35165,983],["Entertainment & lifestyle",153630,1243],["Finance & business",2016,17],["Audio & video streaming",7123,26],["Mobile games",1308,4],["Email, calls & phone tools",122176,338],["Utilities & other",6825,19],["Gaming sites & platforms",13670,29],["Books & reading",551,61]];
+
+const BENCH=0.5;
+const COL={purple:"#8A5CFF",green:"#00E87B",cyan:"#00C8EC",amber:"#FFB84D",pink:"#FF5FA2",blue:"#4D8BFF",grey:"#7A7A85"};
+const DEV_COL={Smartphone:COL.green,Tablet:COL.purple,Desktop:COL.cyan};
+
+const n=v=>Math.round(v).toLocaleString('en-US');
+const pct=(a,b,d=2)=>(a/b*100).toFixed(d)+'%';
+const ctrCls=v=>v>=0.01?'hi':v>=0.005?'mid':'';
+const tot=(rows,i,c)=>rows.reduce((t,r)=>({i:t.i+r[i],c:t.c+r[c]}),{i:0,c:0});
+const TOT=tot(DAILY,1,2);
+
+// Daily table
+document.getElementById('tDaily').innerHTML=DAILY.map(r=>`<tr><td class="bold">${r[0]} 2026</td><td class="num">${n(r[1])}</td><td class="num">${n(r[2])}</td><td class="num ${ctrCls(r[2]/r[1])}">${pct(r[2],r[1])}</td><td class="num">${pct(r[2],TOT.c,1)}</td></tr>`).join('')
++`<tr class="row-total"><td>Total</td><td class="num">${n(TOT.i)}</td><td class="num">${n(TOT.c)}</td><td class="num">${pct(TOT.c,TOT.i)}</td><td class="num">100%</td></tr>`;
+
+// Creative table (sorted by impressions)
+const CRE_SORT=[...CREATIVE].sort((a,b)=>b[2]-a[2]);
+document.getElementById('tCreative').innerHTML=CRE_SORT.map(r=>`<tr><td class="bold">${r[0]}</td><td>${r[1]}</td><td class="num">${n(r[2])}</td><td class="num">${n(r[3])}</td><td class="num ${ctrCls(r[3]/r[2])}">${pct(r[3],r[2])}</td><td class="num">${pct(r[2],TOT.i,1)}</td></tr>`).join('')
++`<tr class="row-total"><td>Grand Total</td><td></td><td class="num">${n(TOT.i)}</td><td class="num">${n(TOT.c)}</td><td class="num">${pct(TOT.c,TOT.i)}</td><td class="num">100%</td></tr>`;
+
+// Device table + split
+document.getElementById('tDevice').innerHTML=DEVICE.map(r=>`<tr><td>Singapore</td><td class="bold">${r[0]}</td><td class="num">${n(r[1])}</td><td class="num">${n(r[2])}</td><td class="num ${ctrCls(r[2]/r[1])}">${pct(r[2],r[1])}</td><td class="num">${pct(r[1],TOT.i,1)}</td><td class="num">${pct(r[2],TOT.c,1)}</td></tr>`).join('')
++`<tr class="row-total"><td>Total</td><td></td><td class="num">${n(TOT.i)}</td><td class="num">${n(TOT.c)}</td><td class="num">${pct(TOT.c,TOT.i)}</td><td class="num">100%</td><td class="num">100%</td></tr>`;
+document.getElementById('devSplit').innerHTML=DEVICE.map(r=>`<div class="split-row"><span><span class="dot" style="display:inline-block;background:${DEV_COL[r[0]]};margin-right:8px"></span>${r[0]}</span><span><b>${n(r[1])}</b> · ${pct(r[1],TOT.i,1)}</span></div>`).join('');
+
+// Publisher category table
+document.getElementById('tCat').innerHTML=PUBCAT.map((r,idx)=>`<tr><td>${idx+1}</td><td class="bold">${r[0]}</td><td class="num">${n(r[1])}</td><td class="num">${n(r[2])}</td><td class="num ${ctrCls(r[2]/r[1])}">${pct(r[2],r[1])}</td><td class="num">${pct(r[1],TOT.i,1)}</td><td class="num">${pct(r[2],TOT.c,1)}</td></tr>`).join('')
++`<tr class="row-total"><td></td><td>All categories</td><td class="num">${n(TOT.i)}</td><td class="num">${n(TOT.c)}</td><td class="num">${pct(TOT.c,TOT.i)}</td><td class="num">100%</td><td class="num">100%</td></tr>`;
+
+// ── Charts ──
+const charts={};
+function initCharts(){
+  if(typeof Chart==='undefined')return;
+  Chart.defaults.color='#7A7A85';Chart.defaults.font.family="'Poppins',system-ui,sans-serif";Chart.defaults.font.size=11;
+  Chart.defaults.borderColor='rgba(255,255,255,0.06)';
+  Chart.defaults.plugins.legend.labels.boxWidth=10;Chart.defaults.plugins.legend.labels.boxHeight=10;
+  Chart.defaults.plugins.tooltip.backgroundColor='#1A1A22';Chart.defaults.plugins.tooltip.borderColor='rgba(255,255,255,0.12)';Chart.defaults.plugins.tooltip.borderWidth=1;Chart.defaults.plugins.tooltip.padding=10;
+  Chart.defaults.maintainAspectRatio=false;
+  const k=v=>v>=1e6?(v/1e6).toFixed(1)+'M':v>=1e3?Math.round(v/1e3)+'K':v;
+  const benchCol=v=>v>=BENCH?COL.green:COL.grey;
+
+  // Daily
+  charts.daily=new Chart(cDaily,{data:{labels:DAILY.map(d=>d[0]),datasets:[
+    {type:'bar',label:'Impressions',data:DAILY.map(d=>d[1]),backgroundColor:'rgba(92,38,255,0.75)',hoverBackgroundColor:'#8A5CFF',borderRadius:6,yAxisID:'y',order:3},
+    {type:'line',label:'CTR',data:DAILY.map(d=>+(d[2]/d[1]*100).toFixed(2)),borderColor:COL.green,backgroundColor:COL.green,pointRadius:5,tension:.35,yAxisID:'y1',order:1},
+    {type:'line',label:'Benchmark (0.5%)',data:DAILY.map(()=>BENCH),borderColor:COL.amber,borderDash:[6,5],borderWidth:1.5,pointRadius:0,yAxisID:'y1',order:2}]},
+    options:{interaction:{mode:'index',intersect:false},plugins:{legend:{position:'top'},tooltip:{callbacks:{label:c=>c.dataset.label==='Impressions'?` Impressions: ${c.raw.toLocaleString()}`:` ${c.dataset.label}: ${c.raw.toFixed(2)}%`}}},
+    scales:{x:{grid:{display:false}},y:{beginAtZero:true,ticks:{callback:k},title:{display:true,text:'Impressions'}},y1:{position:'right',min:0,max:2.5,grid:{drawOnChartArea:false},ticks:{callback:v=>v+'%'},title:{display:true,text:'CTR'}}}}});
+
+  // Creative CTR by size
+  const cs=[...CREATIVE].map(r=>({l:r[0],v:+(r[3]/r[2]*100).toFixed(2),i:r[2]})).sort((a,b)=>b.v-a.v);
+  charts.creCtr=new Chart(cCreCtr,{type:'bar',data:{labels:cs.map(a=>a.l),datasets:[{label:'CTR',data:cs.map(a=>a.v),backgroundColor:cs.map(a=>benchCol(a.v)),borderRadius:4}]},
+    options:{indexAxis:'y',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` CTR: ${c.raw.toFixed(2)}% · ${cs[c.dataIndex].i.toLocaleString()} impressions`}}},scales:{x:{beginAtZero:true,ticks:{callback:v=>v+'%'}},y:{grid:{display:false}}}}});
+
+  // Format type share
+  const types=['Vertical','Square','Horizontal'];
+  const tAgg=types.map(t=>CREATIVE.filter(r=>r[1]===t).reduce((a,r)=>({i:a.i+r[2],c:a.c+r[3]}),{i:0,c:0}));
+  charts.creShare=new Chart(cCreShare,{type:'bar',data:{labels:types.map((t,x)=>`${t} · ${(tAgg[x].c/tAgg[x].i*100).toFixed(2)}% CTR`),datasets:[
+    {label:'Share of impressions',data:tAgg.map(a=>+(a.i/TOT.i*100).toFixed(1)),backgroundColor:COL.purple,borderRadius:5},
+    {label:'Share of clicks',data:tAgg.map(a=>+(a.c/TOT.c*100).toFixed(1)),backgroundColor:COL.green,borderRadius:5}]},
+    options:{plugins:{tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${c.raw.toFixed(1)}%`}}},scales:{x:{grid:{display:false}},y:{beginAtZero:true,max:100,ticks:{callback:v=>v+'%'}}}}});
+
+  // Device
+  charts.devShare=new Chart(cDevShare,{type:'doughnut',data:{labels:DEVICE.map(d=>d[0]),datasets:[{data:DEVICE.map(d=>d[1]),backgroundColor:DEVICE.map(d=>DEV_COL[d[0]]),borderColor:'#0A0A0F',borderWidth:3}]},
+    options:{cutout:'68%',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${c.label}: ${c.raw.toLocaleString()} (${(c.raw/TOT.i*100).toFixed(1)}%)`}}}}});
+  charts.devCtr=new Chart(cDevCtr,{type:'bar',data:{labels:DEVICE.map(d=>d[0]),datasets:[{label:'CTR',data:DEVICE.map(d=>+(d[2]/d[1]*100).toFixed(2)),backgroundColor:DEVICE.map(d=>benchCol(d[2]/d[1]*100)),borderRadius:5}]},
+    options:{plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` CTR: ${c.raw.toFixed(2)}%`}}},scales:{x:{grid:{display:false}},y:{beginAtZero:true,ticks:{callback:v=>v+'%'}}}}});
+
+  // Publisher category CTR + share
+  const pc=[...PUBCAT].sort((a,b)=>b[2]/b[1]-a[2]/a[1]);
+  charts.catCtr=new Chart(cCatCtr,{type:'bar',data:{labels:pc.map(a=>a[0]),datasets:[{label:'CTR',data:pc.map(a=>+(a[2]/a[1]*100).toFixed(2)),backgroundColor:pc.map(a=>benchCol(a[2]/a[1]*100)),borderRadius:4}]},
+    options:{indexAxis:'y',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` CTR: ${c.raw.toFixed(2)}% · ${pc[c.dataIndex][1].toLocaleString()} impressions`}}},scales:{x:{type:'logarithmic',min:0.1,max:20,ticks:{callback:v=>[0.1,0.5,1,5,10].includes(v)?v+'%':''}},y:{grid:{display:false}}}}});
+  charts.catShare=new Chart(cCatShare,{type:'bar',data:{labels:PUBCAT.map(a=>a[0]),datasets:[
+    {label:'Share of impressions',data:PUBCAT.map(a=>+(a[1]/TOT.i*100).toFixed(1)),backgroundColor:COL.purple,borderRadius:4},
+    {label:'Share of clicks',data:PUBCAT.map(a=>+(a[2]/TOT.c*100).toFixed(1)),backgroundColor:COL.green,borderRadius:4}]},
+    options:{indexAxis:'y',plugins:{tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${c.raw.toFixed(1)}%`}}},scales:{x:{beginAtZero:true,ticks:{callback:v=>v+'%'}},y:{grid:{display:false}}}}});
+}
+
+// Tabs
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x===t));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id===t.dataset.tab));
+  Object.values(charts).forEach(c=>c.resize());
+  try{localStorage.setItem('rippleSffTab',t.dataset.tab)}catch(e){}
+}));
+initCharts();
+try{const s=localStorage.getItem('rippleSffTab');if(s){const b=document.querySelector(`.tab[data-tab="${s}"]`);if(b)b.click()}}catch(e){}
+</script>
+</body>
+</html>
